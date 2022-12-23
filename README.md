@@ -77,3 +77,61 @@ Finally, I applied MinMaxScaler to the dataset to keep the distribution as its b
 
 
 
+
+## Work on the static model:
+
+### Feature Filtering
+
+| Chi-square test         | Mutual Info test           |
+|-------------------------|----------------------------|
+| ![](Image/Picture8.png) | ![](Image/Picture9.png)    |
+|Chi-square test scores indicate to have 6 important features|     Mutual Info test scores fail to have a clear indication of the most important feature as the scores are so near                       |
+
+### Feature selection using tree-based models
+
+| Check Nulls              | Check Unique             |
+|--------------------------|--------------------------|
+| ![](Image/Picture10.png) | ![](Image/Picture11.png) |
+
+-	The final set of features: I would select 6 out of the 20 features, which include the highest significant 6 feature in chi-square, as they include the most important features for both the random forest and XGBoost algorithms feature importance.
+Compare the models before and after feature selection
+ 
+-	As shown in the below comparison, the training time and inference time were reduced while the metric are almost the same after the feature selection so I selected the reduced features.
+
+**Compare the models before and after feature selection**
+
+| Classification Metric    | Timing Metric            |
+|--------------------------|--------------------------|
+| ![](Image/Picture12.png) | ![](Image/Picture15.png) |
+| ![](Image/Picture14.png) | ![](Image/Picture16.png) |
+| ![](Image/Picture13.png) |                          |
+
+
+### Data Splitting and justification
+I would split the dataset into train, validation, and test by 70%, 15%, and 15% percentage respectively
+-	Train: To fit the normalizer (Scaler) and train the models using the cross-validation method on this set to evaluate the model’s stability and robustness accurately and efficiently without data leakage.
+-	Test: To evaluate and compare the final models.
+-	Validation: To select the features and apply the hyperparameter tuning on the models.
+
+### Choose and justify the correct performance metric
+I have chosen the F1-Score as a metric to handle the small imbalance in the data while compromising between precision and recall as both are important in this problem, I don’t need to catch all the hacks while having a lot of false alarms (False Positive), and I don’t need to miss a lot of attacks while trying not to produce false alarms so I have chosen F1-score compromise between them.
+Hyperparameter tuning is correct and clear
+-	I used the grid search technique to select the best hyperparameters for the models, which are Random Forest and XGBoost to select the best n_estimators and max_depth that achieve the highest f1-score over the validation set to avoid data leakage.
+
+### Compare and describe the two models you will use
+From the three graphs below:
+-	F1-score, Precision, and Recall score for XGBoost and Random Forest are almost the same
+-	The random forest takes less time for training than XGBoost.
+-	The XGBoost takes less time for inference than the random forest.
+
+### Plot the models’ results
+
+| Right skew feature using KDE  | Right skew feature using KDE  | Statical skewness scores |
+|-------------------------------|-------------------------------|--------------------------|
+| ![](Image/Picture17.png)      | ![](Image/Picture18.png)      | ![](Image/Picture19.png) |
+
+### Discuss and analyze the results
+So, for static models, it's better to choose the XGBoost as it's faster at inference time and only trains once, but for the dynamic model, it's better to choose the random forest as it has less training time, especially as the training set increases with time and require multiple training iterations.
+
+
+
