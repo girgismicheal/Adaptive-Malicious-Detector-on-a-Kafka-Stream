@@ -62,4 +62,18 @@ Skewness
 - The highly negative score represents the left skew, and the positive represents the right skew. 
 
 
+### Data Cleansing and Feature creation
+I have found 8 missing values in the longest_word, I dropped them as letters so we would realize this feature is not important, so I decided to simplify the final pipeline by dropping the missing ones instead of using imputer.
+
+| Check Nulls             | Check Unique            |
+|-------------------------|-------------------------|
+| ![](Image/Picture6.png) | ![](Image/Picture7.png) |
+
+We have 3 object features:
+- The timestamp would be dropped because by intuition it is not a time series problem
+- longest word and sld would be encoded using feature hasher instead of one hot representation due to many unique values in both.
+
+Finally, I applied MinMaxScaler to the dataset to keep the distribution as its but in a unified range, I didn’t use the stander scaler as chi-square requires non-negative ranged variables.
+
+
 
