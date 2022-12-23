@@ -134,4 +134,43 @@ From the three graphs below:
 So, for static models, it's better to choose the XGBoost as it's faster at inference time and only trains once, but for the dynamic model, it's better to choose the random forest as it has less training time, especially as the training set increases with time and require multiple training iterations.
 
 
+## Work on the Dynamic model
+
+### Windows use 1,000 datapoints
+I have implemented a function that reads n records from the consumer, then transforms them into the standard string, splits them by commas, then reads them into data frames, and returns them as a pandas’ data frame.
+
+### Training reevaluation process is clearly described
+Static and dynamic models were evaluated based on the most recent 1000 records, only which were observed by the window function from the producer.
+
+The trigger for retraining the dynamic model depends on the F1-score as I have chosen 85% as a threshold, So, if the F1-score drops under 85%, retrain the dynamic model as by plotting the static f1-scores alone, I have found most of the batches get above 85%, So, I retrain the model if the F1-score dropped under the threshold trying to maintain good performance.
+I have compared 2 training approaches:
+-	The first one to retrain on the Kafka accumulative batches of the dynamic data only.
+-	In the second approach I appended the arrived Kafka batches to the static dataset and retrain the whole set which contains the static & the accumulated Kafka batches.
+
+### Correct performance metrics are selected and justified
+As stated above, I have chosen the F1 score to compromise between both the precision and recall scores equally.
+### Static and Dynamic models are evaluated
+I have evaluated both models for each window batch, by calculating the F1 score and appending the scores in a list to be plotted below.
+
+### Plot the results obtained for both models
+| Retrain on the accumulative streams only   | Retrain on the accumulative streams with static data |
+|--------------------------------------------|------------------------------------------------------|
+| ![](Image/Picture20.png)                   | ![](Image/Picture21.png)                             |
+
+### Analyze the results obtained for both models
+By retraining on the arrived batches only, I noticed that at the beginning the static model performs slightly better than the dynamic model till the dynamic data become significant, then the dynamic model overcomes the static one dramatically starting from batch number 75.
+By retraining on the arrived batches concatenated with the static data, I have found that the difference between the dynamic and static model at the beginning is very small and that makes sense as the static data are most dominant at the beginning but with time while the dynamic data become significant the difference appears significantly. Also, we noticed that in most cases when the f1-score is below the threshold, after retraining the dynamic model performs better than the static one, also the static model performs better in 4/267 while the dynamic performs better on 28/267 and In between they provide close performance.
+
+### Advantages/limitations and knowledge learned is clear and correct
+The static models have very well performance if the upcoming streams are from the same distribution of the trained data, but if the data has drifted over time, then the static model performance would be dropped especially for classical machine learning models.
+
+|             | Static model                                                   | Dynamic model                                         |
+|-------------|----------------------------------------------------------------|-------------------------------------------------------|
+| Train       | Offline training is done once (advantage)                      | Online training is done multiple times (weakness)     |
+| Data drift  | Not adaptive (weakness)                                        | Adaptive (advantage)                                  |
+| Labeling    | Once (advantage)                                               | Continuous (weakness)                                 |
+| Difficulty  | Easy to build and test as all things are done once (advantage) | Harder and require continuous provisioning (weakness) |
+
+
+
 
