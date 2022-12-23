@@ -172,5 +172,9 @@ The static models have very well performance if the upcoming streams are from th
 | Difficulty  | Easy to build and test as all things are done once (advantage) | Harder and require continuous provisioning (weakness) |
 
 
+## References:
+1. https://kafka.apache.org/documentation.html
+2. https://data-flair.training/blogs/apache-kafka-tutorial/
+3. https://medium.com/big-data-engineering/hello-kafka-world-the-complete-guide-to-kafka-with-docker-and-python-f788e2588cf
 
 
