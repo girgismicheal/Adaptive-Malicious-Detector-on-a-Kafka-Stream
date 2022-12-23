@@ -42,3 +42,24 @@ should see two images running like this
 
 Now you are ready to capture the data stream and start the data treatment for your model. 
 
+## EDA
+### Validate data imbalanced with justifications
+The dataset is slightly imbalanced as there is a difference of 10% between the false and true classes.
+
+### Statistical analysis of data
+Feature distributions
+
+| Histograms               | Boxplots (for outliers and skewness) |
+|--------------------------|--------------------------------------|
+| ![](Image/Picture1.png)  | ![](Image/Picture2.png)              |
+
+Skewness
+
+| Right skew feature using KDE | Right skew feature using KDE | Statical skewness scores |
+|------------------------------|------------------------------|--------------------------|
+| ![](Image/Picture3.png)      | ![](Image/Picture4.png)      | ![](Image/Picture5.png)  |
+
+- The highly negative score represents the left skew, and the positive represents the right skew. 
+
+
+
